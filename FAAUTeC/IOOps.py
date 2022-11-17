@@ -23,9 +23,7 @@ except ImportError:
 # AUTHOR INFO #
 ###############
 
-__author__ = 'Y. Hartmaring'
-__copyright__ = ''
-__info__ = 'FAAUTeC'
+__author__ = 'Y. Hartmaring, M. Gruenstaeudl'
 
 #############
 # DEBUGGING #
@@ -148,7 +146,7 @@ class Outp:
             line = csvFile.readline()
             colNum = len(line.split(","))
             latexFile.write("\\begin{longtable}{|" + ('m{' + str(round(1/colNum,3)) + '\\textwidth}|') * (colNum) + "}\n")
-            latexFile.write("\\caption[]{\\textsuperscript{s}tree with lowest distance to unconstraint tree; \\textsuperscript{*}p-value $\\leq$ 0.05\n}\\\\\n")
+            latexFile.write("\\caption[]{\\textsuperscript{s}tree with lowest distance to unconstraint tree; \\textsuperscript{*}p-value $\\leq$ 0.01\n}\\\\\n")
             latexFile.write("\\toprule\n")
             latexFile.write('&'.join([str(i) for i in line.strip().replace("_"," ").split(",")]) + "\\\\\n")
             latexFile.write("\\midrule\n")
@@ -184,7 +182,7 @@ class Outp:
             latexFile.write(' & '.join(line.replace("_","\_").split(",")) + "\\\\n")
 
         latexFile.write("\\end{tabular}\\\\\n")
-        latexFile.write("\\textsuperscript{s}tree with lowest distance to unconstraint tree; \\textsuperscript{*}p-value $\\leq$ 0.05\n")
+        latexFile.write("\\textsuperscript{s}tree with lowest distance to unconstraint tree; \\textsuperscript{*}p-value $\\leq$ 0.01\n")
         latexFile.write("\\end{document}\n")
         #llsFile.write("\\documentclass[a4paper]{article}\n")
         #llsFile.write("\\usepackage{colortbl, geometry, longtable}\n")
@@ -200,4 +198,4 @@ class Outp:
 
         latexFile.close()
 
-        os.system("xelatex -output-directory output/SUMMARY/ output/SUMMARY/au_runtime_table.tex ")
+        os.system("xelatex -output-directory output/SUMMARY/ output/SUMMARY/AUtest_results_table.tex ")

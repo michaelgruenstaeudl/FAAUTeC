@@ -1,10 +1,5 @@
 #!/usr/bin/env python3.7
-
-''' Main operations in FAAUTeC '''
-
-#####################
-# IMPORT OPERATIONS #
-#####################
+''' Main operation of FAAUTeC '''
 
 import os
 import sys
@@ -14,30 +9,6 @@ import dendropy
 import IOOps as IOOps
 import FAAUTeCOps as FOps
 import CheckOps as COps
-
-
-###############
-# AUTHOR INFO #
-###############
-
-__author__ = 'Y. Hartmaring'
-__copyright__ = ''
-__info__ = 'FAAUTeC'
-__version__ = '0.2'
-
-
-#############
-# DEBUGGING #
-#############
-
-#import ipdb
-#ipdb.set_trace()
-
-
-#############
-# FUNCTIONS #
-#############
-
 
 def faautec(alignment,
             constraint_path,
@@ -49,6 +20,8 @@ def faautec(alignment,
             iqtree2_path,
             iqtree_path,
             raxml_path,
+            alpha_level,
+            outgroup,
             latex):
 
     if(not COps.checkPrerequisites(au_inference, iqtree2_path, consel_path, mlcalc)):
@@ -64,6 +37,8 @@ def faautec(alignment,
                   "iqtree2_path: " + str(iqtree2_path),
                   "iqtree_path: " + str(iqtree_path),
                   "raxml_path: " + str(raxml_path),
+                  "alpha_level:" + str(alpha_level),
+                  "outgroup:" + str(outgroup),
                   "latex: " + str(latex)]
 
     FOps.commandline("mkdir output/")
@@ -121,13 +96,12 @@ def faautec(alignment,
         elif ali.split(".")[-1] == "nex":
             ali = IOOps.Inp().nexus2fasta(ali)
         else:
-            print(ali + " was skipped because the file ending is not sopprted. Supported File endings: 'fasta', 'nex', 'phy'")
+            print(ali + " was skipped because the file ending is not supported. Supported File endings: 'fasta', 'nex', 'phy'")
             continue
 
         COps.checkAlignmentFile(ali)
 
-        log = ["#!/bin/bash",
-               "# " + gene]
+        log = ["#!/bin/bash", "# " + gene]
 
         ### Create a clear file system
         os.mkdir("output/" + gene)
@@ -150,7 +124,7 @@ def faautec(alignment,
                         "# Calculate ML-Trees with RAxML"]
 
             ### Calculate the ML-Trees with RAxML
-            log = log + FOps.raxml(ali, constraints, model, gene, threadNumber, raxml_path, raxmlVersion)
+            log = log + FOps.raxml(ali, constraints, model, gene, outgroup, str(threadNumber), raxml_path, raxmlVersion)
 
             ### Find Tree which has the smallest euclidic distance to
             ### to the unconstraint tree
@@ -168,7 +142,7 @@ def faautec(alignment,
                         "# Calculate ML-Trees with IQTree"]
 
             ### Calculate the ML-Trees with IQTree
-            log = log + FOps.iqtree_mltree(ali, constraints, gene, threadNumber,iqtree_path)
+            log = log + FOps.iqtree_mltree(ali, constraints, gene, str(threadNumber),iqtree_path)
 
             ### Find Tree which has the smallest euclidic distance to
             ### to the unconstraint tree
@@ -196,7 +170,7 @@ def faautec(alignment,
                         "# Calculate AU-Test with CONSEL"]
 
             start = time.time()
-            log = log + FOps.consel(ali, consel_path, model, gene, mlcalc, threadNumber, raxml_path, raxmlVersion)
+            log = log + FOps.consel(ali, consel_path, model, gene, mlcalc, str(threadNumber), raxml_path, raxmlVersion)
             runtimes.update({"CONSEL":round(time.time() - start,3)})
 
             ## Save the AU Test values to a variable
@@ -208,7 +182,7 @@ def faautec(alignment,
 
             ## mark values below significance level
             for i in range(len(au_consel)):
-                if au_consel[i] <= 0.05:
+                if au_consel[i] <= alpha_level:
                     au_consel[i] = str(au_consel[i]) + "*"
 
             ## mark the tree with the smallest euclidic distance
@@ -226,7 +200,7 @@ def faautec(alignment,
             log = log + ["\n",
                         "# Calculate AU-Test with IQTree"]
             start = time.time()
-            log = log + FOps.iqtree_autest(ali, iqtree_path, gene, mlcalc, threadNumber, raxmlVersion)
+            log = log + FOps.iqtree_autest(ali, iqtree_path, gene, mlcalc, str(threadNumber), raxmlVersion)
             runtimes.update({"IQTree":round(time.time() - start,3)})
 
             au_iqtree = []
@@ -245,7 +219,7 @@ def faautec(alignment,
 
             ## mark values below significance level
             for i in range(len(au_iqtree)):
-                if au_iqtree[i] <= 0.05:
+                if au_iqtree[i] <= alpha_level:
                     au_iqtree[i] = str(au_iqtree[i]) + "*"
 
             ## mark the tree with the smallest euclidic distance
@@ -262,7 +236,7 @@ def faautec(alignment,
             log = log + ["\n",
                          "# Calculate AU-Test with IQTree"]
             start = time.time()
-            log = log + FOps.iqtree_autest(ali, iqtree2_path, gene, mlcalc, threadNumber, raxmlVersion)
+            log = log + FOps.iqtree_autest(ali, iqtree2_path, gene, mlcalc, str(threadNumber), raxmlVersion)
             runtimes.update({"IQTree2":round(time.time() - start,3)})
 
             au_iqtree2 = []
@@ -281,7 +255,7 @@ def faautec(alignment,
 
             ## mark values below significance level
             for i in range(len(au_iqtree2)):
-                if au_iqtree2[i] <= 0.05:
+                if au_iqtree2[i] <= alpha_level:
                     au_iqtree2[i] = str(au_iqtree2[i]) + "*"
 
             ## mark the tree with the smallest euclidic distance

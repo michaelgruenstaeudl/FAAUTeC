@@ -1,36 +1,10 @@
 #!/usr/bin/env python
-'''
-Custom operations input and output processes
-'''
-
-#####################
-# IMPORT OPERATIONS #
-#####################
+''' Custom operations input and output processes '''
 
 import os
 import subprocess
 from Bio import SeqIO
 from Bio.Nexus import Nexus
-
-###############
-# AUTHOR INFO #
-###############
-
-__author__ = 'Y. Hartmaring'
-__copyright__ = ''
-__info__ = 'FAAUTeC'
-
-#############
-# DEBUGGING #
-#############
-
-#import ipdb
-#ipdb.set_trace()
-
-#############
-# Functions #
-#############
-
 
 def checkAlignmentFile(alignment_path):
     nonEmptySeqs = []
