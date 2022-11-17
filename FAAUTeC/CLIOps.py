@@ -3,9 +3,7 @@
 
 import sys
 import os
-
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'FAAUTeC'))
-
 import FAAUTeCMain
 import argparse
 
@@ -16,7 +14,7 @@ class CLI():
 
     def client(self):
 
-        parser = argparse.ArgumentParser(description="  --  ".join([__author__, __copyright__, __info__, __version__]))
+        parser = argparse.ArgumentParser(description="FAAUTeC v.0.2")
         parser._action_groups.pop()
         required = parser.add_argument_group('required arguments')
         optional = parser.add_argument_group('optional arguments')
@@ -89,11 +87,6 @@ class CLI():
                              help="(Optional) Number of maximal used threads",
                              default='1',
                              required=False)
-
-        optional.add_argument('--version',
-                            help='(Optional) print version number and exit',
-                            action='version',
-                            version='%(prog)s ' + __version__)
 
         args = parser.parse_args()
 
