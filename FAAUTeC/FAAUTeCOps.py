@@ -171,7 +171,7 @@ def raxml(alignment, constraints, model, gene_name, outgroup_name, threadNumber,
         log.append(commandline(raxml_path + \
                                " --msa " + alignment + \
                                " --prefix RAxML_withoutConstraints_" + gene_name + \
-                               " --model  " + model + \
+                               " --model " + model + \
                                " --seed " + ''.join(random.sample(string.digits, 5)) + \
                                "--threads " + threadNumber)
                   )
@@ -229,6 +229,8 @@ def raxml(alignment, constraints, model, gene_name, outgroup_name, threadNumber,
 
 def consel(alignment, consel_path, model, gene_name, mlcalc, threadNumber, raxml_path, raxml_version):
     log = []
+    if os.path.isfile(alignment+".reduced"):  # Prefer the reduced file (i.e., no invariable columns) if it exists
+        alignment = alignment+".reduced"
     if(mlcalc == "RAxML"):
         if (raxml_version == "standard"):
             log.append(commandline(raxml_path + \
