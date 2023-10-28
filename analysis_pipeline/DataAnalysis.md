@@ -57,14 +57,14 @@ for each of the three matrices _gene_, _exon_ and _codon-aligned_
 
   2. run the python script for IQTree
   ```
-  ALIGN=/path/to/alignments_ge
-  CONST=path/to/iqtree_ge_wobl_removedTaxa.nwk
+  ALIGN=path_to_dir_of_alignments_ge/
+  CONST=path_to_iqtree_ge_wobl_removedTaxa.nwk
   MLINF=IQTree
   AUINF=CONSEL;IQTree;IQTree2
-  CONSL=path/to/consel
+  CONSL=path_to_consel_dir/
   IQTREE2=/path/to/iqtree2
   NTHREADS=4
-  FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inferene $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
+  FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inference $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
   ```
 
   3. rename the output folder to `output_ge_iqtree`
@@ -106,19 +106,19 @@ python3 path/to/multi_AU.py $CONSL $IQTREE $IQTREE2 $RAXML $INPUT $NRUNS $NHYPOS
 
 1. run the program for IQTree
 ```
-ALIGN=/path/to/alignments
-CONST=path/to/combined_wobl.tre
+ALIGN=path_to_alignments_dir/
+CONST=path_to_combined_wobl.tre
 MLINF=IQTree
 AUINF=CONSEL;IQTree;IQTree2
-CONSL=path/to/consel
+CONSL=path_to_consel_dir/
 IQTREE2=/path/to/iqtree2
 NTHREADS=4
-FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inferene $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
+FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inference $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
 ```
 2. rename output folder
 ```
 MLINF=RAxML
-FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inferene $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
+FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inference $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
 ```
 
 #### Calculate the AU Test five times
