@@ -1,6 +1,6 @@
 ***
 **Data analysis for my Master thesis**\
-author: Yannick Hartmaring
+author: Yannick Hartmaring; improved by: Michael Gruenstaeudl, PhD
 ***
 
 
@@ -53,37 +53,38 @@ cat astral_bs_boot_apr2019_wobl.tre iq_bs_besttree_boot_apr2019_wobl.tre iq_gepa
 ## Execution of FAAUTeC
 ### Goncalves et. al (2019)
 for each of the three matrices _gene_, _exon_ and _codon-aligned_
-  1. copy the Alignment files in an empty folder, except the concat files
+  1. Copy the alignment files in an empty folder (except the concatenated file)
 
-  2. run the python script for IQTree
+  2. Run FAAUTeC with IQTree as tree inference software; rename output folder to `output_ge_iqtree`
   ```
-  ALIGN=path_to_dir_of_alignments_ge/
-  CONST=path_to_iqtree_ge_wobl_removedTaxa.nwk
+  ALIGN=/path/to/dir_of_alignments_ge/
+  CONST=/path/to/iqtree_ge_concat_wobl.nwk
   MLINF=IQTree
   AUINF=CONSEL;IQTree;IQTree2
-  CONSL=path_to_consel_dir/
+  CONSL_DIR=/path/to/consel_bin_dir/
   IQTREE2=/path/to/iqtree2
   NTHREADS=4
-  FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inference $AUINF --path_consel $CONSL --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
+
+  FAAUTeC -a $ALIGN -c $CONST --ml_inference $MLINF --au_inference $AUINF \
+      --path_consel $CONSL_DIR --path_iqtree2 $IQTREE2 --thread_number $NTHREADS --latex_format
+  mv output output_ge_iqtree
   ```
-
-  3. rename the output folder to `output_ge_iqtree`
-
-  4. run the python script for RAxML
+  3. Run FAAUTeC with RAxML (default) as tree inference software; rename output folder to `output_ge_raxml`
   ```
-  python3 path/to/plastomeGeneCongruenceTests_launcher_CLI.py -a path/to/folder/fromstep2/ -c path/to/iqtree_ge_wobl_removedTaxa.nwk --consel path/to/consel/bin/ --mlcalc RAxML -T 4
+  FAAUTeC -a $ALIGN -c $CONST 
+      --path_consel $CONSL_DIR --thread_number $NTHREADS
+  mv output/ output_ge_raxml/
   ```
-
-  5. rename the output folder to `output_ge_raxml`
-
-  6. combine the output tables with
+  4. Combine the output tables via script `combineTables.py`
   ```
-  python3 path/to/scripts/combineTables.py -1 output_ge_iqtree/SUMMARY/au_runtime_table.csv -2 output_ge_raxml/SUMMARY/au_runtime_table.csv -o combined_ge.csv
+  combineTables.py \
+      -1 output_ge_iqtree/SUMMARY/au_runtime_table.csv \
+      -2 output_ge_raxml/SUMMARY/au_runtime_table.csv \
+      -o combined_ge.csv
   ```
+  5. Manually remove the runtime information and change the names of the columns
 
-  7. remove the runtime information and change the names of the columns
-
-Afterward combine all output tables from _gene_, _exon_ and _codon-aligned_ in one table to handle them as hypotheses
+  6. Afterwards, combine all output tables from _gene_, _exon_ and _codon-aligned_ in one table to handle them as hypotheses
 
 #### Calculate the AU Test five times
 ```
